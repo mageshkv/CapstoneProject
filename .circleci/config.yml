@@ -151,11 +151,11 @@ jobs:
 workflows:
   default:
       jobs:
-#        - test-phase  
-#        - build-upload-image:
-#            requires: [test-phase]
-#        - create-cluster:
-#            requires: [build-upload-image]
+        - test-phase  
+        - build-upload-image:
+            requires: [test-phase]
+        - create-cluster:
+            requires: [build-upload-image]
         - deploy-cluster:
             cluster-name: capstone
             requires: [create-cluster]            
