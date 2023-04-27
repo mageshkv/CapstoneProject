@@ -122,8 +122,7 @@ jobs:
       - checkout
       - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
-#          cluster-name: << parameters.cluster-name >>
-          cluster-name: capstone
+          cluster-name: << parameters.cluster-name >>
           aws-region: ${AWS_REGION}
           install-kubectl: true
       - kubernetes/create-or-update-resource:
@@ -157,9 +156,9 @@ workflows:
 #            requires: [test-phase]
 #        - create-cluster:
 #            requires: [build-upload-image]
-        - deploy-cluster
-#            cluster-name: capstone
-#            requires: [create-cluster]            
+        - deploy-cluster:
+            cluster-name: capstone
+            requires: [create-cluster]            
         - check-cluster:
             cluster-name: capstone
             requires: [deploy-cluster]
