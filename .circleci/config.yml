@@ -106,7 +106,7 @@ jobs:
       - run:
           name: AWS EKS cluster creation
           command: |
-
+            eksctl get cluster 
             CLUSTER=$(eksctl get cluster |grep capstone|awk '{print $1}')
             echo $CLUSTER
             if [ "$CLUSTER" = "capstone" ]
