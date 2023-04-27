@@ -22,12 +22,12 @@ spec:
         app: capstone
     spec:
       containers:
-        - image: yshreybhat/capstone:latest
+        - image: lava1984/capstone-project:latest
           imagePullPolicy: Always
           name: newimage
           ports:
             - containerPort: 80
-
+#
 #loadbalancer
 apiVersion: v1
 kind: Service
