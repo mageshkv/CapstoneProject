@@ -4,7 +4,7 @@ metadata:
   name: capstone
   labels:
     app: capstone
-  namespace: default
+  namespace: capstone
 spec:
   replicas: 2
   progressDeadlineSeconds: 3600
