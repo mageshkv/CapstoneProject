@@ -87,9 +87,9 @@ jobs:
             docker build --tag=capstone .
             docker images ls
             docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWD"
-            docker tag capstone lava1984/capstone-project:latest
+            docker tag capstone lava1984/capstone:latest
             docker images ls
-            docker push lava1984/capstone-project:latest
+            docker push lava1984/capstone:latest
             
   create-cluster:
     docker:
