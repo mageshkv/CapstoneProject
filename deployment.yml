@@ -22,14 +22,14 @@ spec:
         app: capstone
     spec:
       containers:
-        - image: lava1984/capstone:latest
+        - image: lava1984/capstone:final
           imagePullPolicy: Always
           name: newimage
           ports:
             - containerPort: 80
 ---
-#
-#loadbalancer
+#Services
+
 apiVersion: v1
 kind: Service
 metadata:

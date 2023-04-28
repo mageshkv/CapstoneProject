@@ -5,7 +5,7 @@ orbs:
                                            
 commands:
   install_awscli:
-    description: Install AWS CLI v2
+    description: Install AWS CLI
     steps:
       - run:
           name: Install AWS CLI v2
@@ -22,10 +22,10 @@ commands:
             curl -fsSL https://deb.nodesource.com/setup_13.x | sudo -E bash -
             apt install -y nodejs
   install_aws_eks:
-    description: Install eksctl binaries
+    description: Install eksctl 
     steps:
       - run:
-          name: Install eksctl binaries
+          name: Install eksctl 
           command: |
             mkdir -p src
             curl --silent --location --retry 5 "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C src
@@ -37,7 +37,7 @@ commands:
                 $SUDO mv src/eksctl /usr/local/bin/
                 rmdir src
   install_kubectl:
-    description:
+    description: Install kubectl
     steps:
       - run:
           name: Install kubectl
@@ -46,7 +46,7 @@ commands:
             install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
             kubectl version --client
 jobs:
-  test-phase:
+  test-lint-phase:
     docker:
       - image: python:3.7.3-stretch
     steps:
@@ -73,10 +73,10 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
 
-  build-upload-image:
+  build-upload-docker-image:
     docker:
       - image: circleci/golang:1.15
-        #working_directory: ~/repo
+        
     steps:
       - checkout
       - setup_remote_docker:
@@ -87,13 +87,13 @@ jobs:
             docker build --tag=capstone .
             docker images ls
             docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWD"
-            docker tag capstone lava1984/capstone:latest
+            docker tag capstone lava1984/capstone:final
             docker images ls
-            docker push lava1984/capstone:latest
+            docker push lava1984/capstone:final
             docker images ls
             docker ps
             
-  create-cluster:
+  create-eks-cluster:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -106,12 +106,12 @@ jobs:
       - install_aws_eks
       - install_kubectl
       - run:
-          name: AWS EKS cluster creation
+          name: Create AWS EKS cluster
           command: |
             eksctl create cluster --name capstone --region us-east-1 --zones us-east-1a,us-east-1b,us-east-1c,us-east-1d
             eksctl utils describe-stacks --region us-east-1 --cluster=capstone
             eksctl get cluster --name=capstone --region=us-east-1
-###
+
   deploy-cluster:
     executor: aws-eks/python3
     parameters:
@@ -130,7 +130,7 @@ jobs:
           resource-file-path: deployment.yml
           resource-name: deployment/capstone
 #
-  check-cluster:
+  verify-cluster:
     executor: aws-eks/python3
     parameters: 
       cluster-name:
@@ -146,19 +146,21 @@ jobs:
           command: |
             kubectl get nodes
             kubectl get all
+            kubectl get services
+            kubectl get deployments
 
 workflows:
   default:
       jobs:
-        - test-phase  
-        - build-upload-image:
-             requires: [test-phase]
-        - create-cluster:
-             requires: [build-upload-image]
+        - test-lint-phase  
+        - build-upload-docker-image:
+             requires: [test-lint-phase]
+        - create-eks-cluster:
+             requires: [build-upload-docker-image]
         - deploy-cluster:
              cluster-name: capstone
-             requires: [create-cluster]            
-        - check-cluster:
+             requires: [create-eks-cluster]            
+        - verify-cluster:
              cluster-name: capstone
              requires: [deploy-cluster]
        
