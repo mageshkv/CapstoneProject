@@ -156,10 +156,10 @@ workflows:
         - create-cluster:
              requires: [build-upload-image]
         - deploy-cluster:
-            cluster-name: capstone
+             cluster-name: capstone
              requires: [create-cluster]            
         - check-cluster:
-            cluster-name: capstone
-            requires: [deploy-cluster]
+             cluster-name: capstone
+             requires: [deploy-cluster]
        
        
