@@ -106,7 +106,13 @@ jobs:
       - run:
           name: AWS EKS cluster creation
           command: |
-            
+            CLUSTER=$(eksctl get cluster |grep capstone|awk '{print $1}')
+            echo $CLUSTER
+            if [ "$CLUSTER" = "capstone" ]
+            then
+              echo "Cluster exists"
+            else
+              echo "Creating EKS cluster"
             eksctl create cluster --name capstone --region us-east-1 --zones us-east-1a,us-east-1b,us-east-1c,us-east-1d
             eksctl utils describe-stacks --region us-east-1 --cluster=capstone
             eksctl get cluster --name=capstone --region=us-east-1
@@ -123,7 +129,6 @@ jobs:
       - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
-          
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
