@@ -24,9 +24,10 @@ spec:
       containers:
         - image: lava1984/capstone:latest
           imagePullPolicy: Always
-          name: capstone:latest
+          name: newimage
           ports:
             - containerPort: 80
+---
 #
 #loadbalancer
 apiVersion: v1
