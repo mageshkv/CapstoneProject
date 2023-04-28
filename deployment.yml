@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: capstone
   labels:
-    app: app
+    app: capstone
   namespace: default
 spec:
   replicas: 2
@@ -19,7 +19,7 @@ spec:
   template:
     metadata:
       labels:
-        app: capstone
+        app: app
     spec:
       containers:
         - image: lava1984/capstone:latest
