@@ -90,6 +90,8 @@ jobs:
             docker tag capstone lava1984/capstone:latest
             docker images ls
             docker push lava1984/capstone:latest
+            docker images ls
+            docker ps
             
   create-cluster:
     docker:
@@ -106,16 +108,12 @@ jobs:
       - run:
           name: AWS EKS cluster creation
           command: |
-            CLUSTER=$(eksctl get cluster |grep capstone|awk '{print $1}')
-            echo $CLUSTER
-            if [ "$CLUSTER" = "capstone" ]
-            then
-              echo "Cluster exists"
-            else
-              echo "Creating EKS cluster"
+            CLUSTER=capstone
             eksctl create cluster --name capstone --region us-east-1 --zones us-east-1a,us-east-1b,us-east-1c,us-east-1d
             eksctl utils describe-stacks --region us-east-1 --cluster=capstone
             eksctl get cluster --name=capstone --region=us-east-1
+            kubectl apply -f ./service.json
+            kubectl get services
 ###
   deploy-cluster:
     executor: aws-eks/python3
