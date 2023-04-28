@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: capstone
   labels:
-    app: capstone
+    app: app
   namespace: default
 spec:
   replicas: 2
