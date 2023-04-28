@@ -144,7 +144,6 @@ jobs:
       - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
-        
       - run:
           name: Check Cluster status
           command: |
@@ -154,14 +153,14 @@ jobs:
 workflows:
   default:
       jobs:
-#        - test-phase  
-#        - build-upload-image:
-#            requires: [test-phase]
-#        - create-cluster:
-#            requires: [build-upload-image]
+        - test-phase  
+        - build-upload-image:
+            requires: [test-phase]
+        - create-cluster:
+            requires: [build-upload-image]
         - deploy-cluster:
             cluster-name: capstone
-#            requires: [create-cluster]            
+            requires: [create-cluster]            
         - check-cluster:
             cluster-name: capstone
             requires: [deploy-cluster]
