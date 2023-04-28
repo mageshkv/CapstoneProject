@@ -108,7 +108,7 @@ jobs:
       - run:
           name: AWS EKS cluster creation
           command: |
-            CLUSTER=capstone
+             
             eksctl create cluster --name capstone --region us-east-1 --zones us-east-1a,us-east-1b,us-east-1c,us-east-1d
             eksctl utils describe-stacks --region us-east-1 --cluster=capstone
             eksctl get cluster --name=capstone --region=us-east-1
@@ -130,7 +130,7 @@ jobs:
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: deployment.yml
-          resource-name: deployment/apps
+          resource-name: deployment/capstone
 #
   check-cluster:
     executor: aws-eks/python3
