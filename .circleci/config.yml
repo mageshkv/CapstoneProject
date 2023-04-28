@@ -112,8 +112,7 @@ jobs:
             eksctl create cluster --name capstone --region us-east-1 --zones us-east-1a,us-east-1b,us-east-1c,us-east-1d
             eksctl utils describe-stacks --region us-east-1 --cluster=capstone
             eksctl get cluster --name=capstone --region=us-east-1
-            kubectl apply -f ./service.json
-            kubectl get services
+
 ###
   deploy-cluster:
     executor: aws-eks/python3
@@ -155,14 +154,14 @@ jobs:
 workflows:
   default:
       jobs:
-        - test-phase  
-        - build-upload-image:
-            requires: [test-phase]
-        - create-cluster:
-            requires: [build-upload-image]
+#        - test-phase  
+#        - build-upload-image:
+#            requires: [test-phase]
+#        - create-cluster:
+#            requires: [build-upload-image]
         - deploy-cluster:
             cluster-name: capstone
-            requires: [create-cluster]            
+#            requires: [create-cluster]            
         - check-cluster:
             cluster-name: capstone
             requires: [deploy-cluster]
